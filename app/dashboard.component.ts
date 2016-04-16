@@ -13,7 +13,7 @@ import { HeroService } from './hero.service';
         *ngFor="#hero of heroes"
         (click)="goToDetail(hero)"
         >
-        <div class="module hero">
+        <div>
           <h4>{{hero.name}}</h4>
         </div>
       </div>
