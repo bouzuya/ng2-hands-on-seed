@@ -1,58 +1,49 @@
-import { Component, OnInit } from 'angular2/core';
-import { Hero } from './hero';
-import { HeroDetailComponent } from './hero-detail.component';
+import { Component } from 'angular2/core';
+import {
+  RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS
+} from 'angular2/router';
+
 import { HeroService } from './hero.service';
+import { DashboardComponent } from './dashboard.component';
+import { HeroesComponent } from './heroes.component';
+import { HeroDetailComponent } from './hero-detail.component';
 
 @Component({
   selector: 'my-app',
   template: `
     <h1>{{title}}</h1>
-    <h2>My Heroes</h2>
-    <ul
-      class="heroes"
-      >
-      <li
-        [class.selected]="hero === selectedHero"
-        *ngFor="#hero of heroes"
-        (click)="onSelect(hero)"
-        >
-        <span
-          class="badge"
-          >{{hero.id}}</span>
-          &nbsp;{{hero.name}}
-      </li>
-    </ul>
-    <my-hero-detail
-      [hero]="selectedHero"
-      >
-    </my-hero-detail>
+    <nav>
+      <a [routerLink]="['Dashboard']">Dashboard</a>
+      <a [routerLink]="['Heroes']">Heroes</a>
+    </nav>
+    <router-outlet></router-outlet>
   `,
-  providers: [
-    HeroService
-  ],
   directives: [
-    HeroDetailComponent
+    ROUTER_DIRECTIVES
+  ],
+  providers: [
+    ROUTER_PROVIDERS,
+    HeroService
   ]
 })
-export class AppComponent implements OnInit {
-  title: string = 'Tour of Heroes';
-  heroes: Hero[];
-  selectedHero: Hero; // undefined
-
-  constructor(private _heroService: HeroService) {
+@RouteConfig([
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: DashboardComponent,
+    useAsDefault: true
+  },
+  {
+    path: '/detail/:id',
+    name: 'HeroDetail',
+    component: HeroDetailComponent
+  },
+  {
+    path: '/heroes',
+    name: 'Heroes',
+    component: HeroesComponent
   }
-
-  getHeroes(): void {
-    this._heroService
-      .getHeroes()
-      .then(heroes => this.heroes = heroes);
-  }
-
-  ngOnInit(): any {
-    this.getHeroes();
-  }
-
-  onSelect(hero: Hero): void {
-    this.selectedHero = hero;
-  }
+])
+export class AppComponent {
+  title = 'Tour of Heroes';
 }
